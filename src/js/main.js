@@ -3,7 +3,7 @@ import {scheduleJob} from 'node-schedule';
 console.log('Starting scheduler');
 
 scheduleJob(
-  {min: 60},
+  {minute: 60},
   () => {
     const now = new Date();
 
