@@ -15,6 +15,9 @@ config = {
         test: /\.(js|jsx)$/
       }
     ]
+  },
+  node: {
+    fs: 'empty'
   }
 };
 
