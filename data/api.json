@@ -1,0 +1,39 @@
+[
+  {
+    "path": "/chores/*",
+    "paramenters": {
+      "description": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "required": true
+      }
+    },
+    "data": true
+  },
+  {
+    "path": "/people/*",
+    "paramenters": {
+      "curChore": {
+        "type": "string"
+      },
+      "fullName": {
+        "type": "string",
+        "required": true
+      },
+      "id": {
+        "type": "string",
+        "required": true
+      },
+      "prevChore": {
+        "type": "string"
+      },
+      "username": {
+        "type": "string",
+        "required": true
+      }
+    },
+    "data": true
+  }
+]
