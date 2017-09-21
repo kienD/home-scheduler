@@ -7,16 +7,18 @@ const HomeConstants = require('./home-constants');
 const {
   API_KEY,
   CHORE_LIST_ID,
+  DATABASE_URL,
   HOME_BOARD_ID,
   TOKEN
 } = process.env;
 
 const trello = new Trello(API_KEY, TOKEN);
 
-const addChore = (idMembers, name, daysToComplete) => {
+const addChore = (idMembers, {name, desc}) => {
+  console.log(idMembers)
   return addCardToList(
     {
-      // due:
+      desc,
       idList: CHORE_LIST_ID,
       idMembers,
       name
@@ -25,7 +27,15 @@ const addChore = (idMembers, name, daysToComplete) => {
 }
 
 const addCardToList = options => {
-  trello.post('1/cards', options);
+  trello.post(
+    '1/cards',
+    options,
+    (error, data) => {
+      if (error) {
+        throw error;
+      }
+    }
+  );
 }
 
 const getLists = () => trello.get(
@@ -58,30 +68,16 @@ const getMembers = () => {
       if (error) {
         throw error;
       }
-
-      console.log('members', lodash.sortBy(data, o => o.fullName));
-
-      return data.map(
-        person => {
-          const {fullName, id, username} = person;
-
-          wedeploy.data('db-home-scheduler.wedeploy.io').create(
-            'people',
-            {
-              fullName,
-              id,
-              username
-            }
-          ).then(
-            response => {
-              console.log("saved:", response);
-            }
-          ).catch(
-            error => console.log(error)
-          );
-        }
-      );
     }
+  );
+}
+
+updateChore = (choreId, userId) => {
+  return wedeploy.data(DATABASE_URL).update(
+    `people/${userId}`,
+    {"curChore": choreId}
+  ).then(
+    response => console.log(`Updated values to ${response}`)
   );
 }
 
@@ -89,3 +85,4 @@ exports.addChore = addChore;
 exports.getLists = getLists;
 exports.getListCards = getListCards;
 exports.getMembers = getMembers;
+exports.updateChore = updateChore;

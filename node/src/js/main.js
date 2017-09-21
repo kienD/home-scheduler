@@ -1,49 +1,61 @@
 const schedule = require('node-schedule');
+const wedeploy = require('wedeploy');
 
 const HomeConstants = require('./home-constants');
 const trelloTasks = require('./trelloTasks');
 
-const {BATHROOM, FLOORS, SURFACES} = HomeConstants.tasks;
 const {getMembers, addChore} = trelloTasks;
 
-const choresArray = [BATHROOM, FLOORS, SURFACES];
+const {DATABASE_URL} = process.env;
 
 console.log('Starting scheduler');
 
-// trelloTasks.getLists();
-// trelloTasks.addChores();
+schedule.scheduleJob(
+  {
+    dayOfWeek: [0, 1, 2, 3, 4, 5, 6]
+  },
+  () => {
+    const now = new Date();
 
-getMembers()//.then(
-  // members => {
-  //   members.forEach(
-  //     (member, i) => addChore(member, choresArray[i])
-  //   );
-  // }
-// );
+    console.log(`The Current Time is ${now}`);
+  }
+);
 
-// choresArray.forEach(
-//   (chore, i) => {
-//     addChore(membersArray[i], chore);
-//   }
-// );
+schedule.scheduleJob(
+  {
+    dayOfWeek: 4,
+    hour: 10,
+    minute: 0
+  },
+  () => {
+    wedeploy.data(DATABASE_URL).get('people').then(
+      people => {
+        const now = new Date();
 
+        console.log('Executed job at', now);
 
-// schedule.scheduleJob(
-//   {minute: 60},
-//   () => {
-//     const now = new Date();
+        people.map(({curChore, id}) => {
+          addChore(id, HomeConstants.tasks[curChore]);
 
-//     console.log(`The Current Time is ${now}`);
-//   }
-// );
+          console.log(curChore);
 
-// schedule.scheduleJob(
-//   {
-//     dayOfWeek: 5,
-//     hour: 20
-//   },
-//   () => {
-//     console.log('Executing Job');
-//   }
-// );
+          if (curChore === choresArray.length - 1) {
+            wedeploy.data(DATABASE_URL).update(
+              `people/${id}`,
+              {
+                "curChore": 0
+              }
+            ).then (response => console.log(response))
+          }
+          else {
+            wedeploy.data(DATABASE_URL).update(
+              `people/${id}`,
+              {"curChore": curChore + 1}
+            );
+          }
+        });
+      }
+    );
+  }
+);
 
