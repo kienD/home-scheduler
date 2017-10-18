@@ -12,7 +12,9 @@ console.log('Starting scheduler');
 
 schedule.scheduleJob(
   {
-    dayOfWeek: [0, 1, 2, 3, 4, 5, 6]
+    dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
+    hour: 5,
+    minute: 0
   },
   () => {
     const now = new Date();
@@ -24,7 +26,7 @@ schedule.scheduleJob(
 schedule.scheduleJob(
   {
     dayOfWeek: 4,
-    hour: 10,
+    hour: 6,
     minute: 0
   },
   () => {
