@@ -1,2 +1,2 @@
 # home-scheduler
-script to run reminders for home tasks on Trello
+Script to run reminders for home tasks on [Trello](http://www.trello.com).
