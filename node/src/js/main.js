@@ -41,7 +41,7 @@ schedule.scheduleJob(
 
           console.log(curChore);
 
-          if (curChore === choresArray.length - 1) {
+          if (curChore === HomeConstants.tasks.length - 1) {
             wedeploy.data(DATABASE_URL).update(
               `people/${id}`,
               {
@@ -60,4 +60,3 @@ schedule.scheduleJob(
     );
   }
 );
-
